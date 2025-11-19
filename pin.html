@@ -1,0 +1,388 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>ATM PIN Authentication — Frontend</title>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --neon: #00ff99;
+      --accent: #00ccff;
+    }
+
+    html,
+    body {
+      height: 100%;
+      margin: 0;
+    }
+
+    body {
+      font-family: 'Poppins', sans-serif;
+      background: radial-gradient(circle at 10% 10%, #071124 0%, #0b2540 35%, #0d1a2b 100%);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      overflow: hidden;
+      color: #e6f7f0;
+    }
+
+    .float-glow {
+      position: absolute;
+      width: 28px;
+      height: 28px;
+      border-radius: 50%;
+      filter: blur(12px);
+      opacity: 0.25;
+      background: linear-gradient(135deg, var(--neon), var(--accent));
+      animation: floaty 6s ease-in-out infinite alternate;
+      mix-blend-mode: screen;
+    }
+
+    .float-glow.g1 {
+      top: 8%;
+      left: 12%;
+      animation-delay: 0s;
+    }
+
+    .float-glow.g2 {
+      top: 18%;
+      right: 8%;
+      width: 36px;
+      height: 36px;
+      animation-delay: 1.8s;
+    }
+
+    .float-glow.g3 {
+      bottom: 12%;
+      left: 10%;
+      width: 22px;
+      height: 22px;
+      animation-delay: 3.2s;
+    }
+
+    .float-glow.g4 {
+      bottom: 18%;
+      right: 18%;
+      width: 30px;
+      height: 30px;
+      animation-delay: 4.5s;
+    }
+
+    @keyframes floaty {
+      from {
+        transform: translateY(0)scale(.9)
+      }
+
+      to {
+        transform: translateY(-28px)scale(1.15)
+      }
+    }
+
+    .atm-wrap {
+      width: 720px;
+      max-width: 94vw;
+      border-radius: 20px;
+      padding: 36px;
+      background: linear-gradient(180deg, rgba(255, 255, 255, 0.03), rgba(255, 255, 255, 0.02));
+      border: 1px solid rgba(255, 255, 255, 0.06);
+      box-shadow: 0 20px 60px rgba(0, 0, 0, 0.6), 0 0 40px rgba(0, 255, 153, 0.03) inset;
+      backdrop-filter: blur(14px)saturate(120%);
+      position: relative;
+      transition: transform .35s ease, box-shadow .35s ease;
+      display: grid;
+      grid-template-columns: 1fr 420px;
+      gap: 28px;
+    }
+
+    .atm-wrap:hover {
+      transform: translateY(-8px)scale(1.01);
+    }
+
+    .panel-left {
+      padding: 18px;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+    }
+
+    .brand {
+      font-size: 28px;
+      font-weight: 700;
+      color: var(--neon);
+      margin-bottom: 12px;
+      letter-spacing: 1px;
+    }
+
+    .sub {
+      font-size: 14px;
+      color: rgba(255, 255, 255, 0.75);
+      line-height: 1.5;
+      margin-bottom: 20px;
+    }
+
+    .panel-right {
+      padding: 22px;
+      border-radius: 14px;
+      background: linear-gradient(180deg, rgba(255, 255, 255, 0.02), rgba(255, 255, 255, 0.01));
+      border: 1px solid rgba(255, 255, 255, 0.03);
+      box-shadow: 0 8px 30px rgba(0, 0, 0, 0.45), inset 0 2px 8px rgba(255, 255, 255, 0.02);
+    }
+
+    h2 {
+      margin: 6px 0 18px;
+      font-size: 22px;
+      color: var(--neon);
+    }
+
+    .pin-display {
+      width: 100%;
+      padding: 18px 14px;
+      border-radius: 12px;
+      background: linear-gradient(180deg, rgba(0, 0, 0, 0.45), rgba(255, 255, 255, 0.02));
+      border: 1px solid rgba(255, 255, 255, 0.04);
+      box-shadow: 0 6px 18px rgba(0, 0, 0, 0.5), inset 0 -6px 20px rgba(0, 0, 0, 0.25);
+      text-align: center;
+      margin-bottom: 18px;
+      position: relative;
+    }
+
+    .pin-display input {
+      width: 100%;
+      border: none;
+      background: transparent;
+      font-size: 28px;
+      letter-spacing: 14px;
+      color: #e6fff7;
+      text-align: center;
+      outline: none;
+      caret-color: transparent;
+    }
+
+    .pin-display .hint {
+      position: absolute;
+      left: 14px;
+      top: 10px;
+      font-size: 12px;
+      color: rgba(255, 255, 255, 0.45);
+    }
+
+    .keypad {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 12px;
+    }
+
+    .kp-btn {
+      padding: 18px 0;
+      font-size: 20px;
+      font-weight: 600;
+      border-radius: 12px;
+      border: none;
+      cursor: pointer;
+      color: #031014;
+      background: linear-gradient(180deg, #ffffff, #e6f6ee);
+      box-shadow: 0 6px 18px rgba(0, 0, 0, 0.25);
+      transition: transform .14s ease, filter .18s ease;
+    }
+
+    .kp-btn:active {
+      transform: translateY(2px)scale(.995);
+    }
+
+    .kp-btn:hover {
+      transform: scale(1.04);
+      filter: brightness(1.02);
+    }
+
+    .kp-special {
+      color: #fff;
+      background: linear-gradient(135deg, rgba(0, 204, 255, 1), rgba(0, 136, 255, 1));
+    }
+
+    .kp-clear {
+      background: linear-gradient(135deg, #ff5f6d, #ffc371);
+      color: #111;
+    }
+
+    .kp-enter {
+      background: linear-gradient(135deg, #00ff99, #00c06a);
+      color: #062019;
+      font-size: 22px;
+    }
+
+    #message {
+      margin-top: 16px;
+      min-height: 28px;
+      font-weight: 700;
+      text-align: center;
+      transition: all .35s ease;
+      opacity: 0;
+      transform: translateY(6px);
+    }
+
+    #message.visible {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    .msg-success {
+      color: var(--neon);
+    }
+
+    .msg-error {
+      color: #ff7a7a;
+      animation: shake .42s;
+    }
+
+    @keyframes shake {
+      0% {
+        transform: translateX(0)
+      }
+
+      20% {
+        transform: translateX(-8px)
+      }
+
+      40% {
+        transform: translateX(8px)
+      }
+
+      60% {
+        transform: translateX(-6px)
+      }
+
+      80% {
+        transform: translateX(6px)
+      }
+
+      100% {
+        transform: translateX(0)
+      }
+    }
+
+    @media(max-width:880px) {
+      .atm-wrap {
+        grid-template-columns: 1fr;
+        width: 92vw;
+        padding: 22px;
+        gap: 18px;
+      }
+
+      .panel-right {
+        order: 2;
+      }
+
+      .panel-left {
+        order: 1;
+        text-align: center;
+      }
+    }
+
+    .atm-wrap::after {
+      content: "";
+      position: absolute;
+      inset: -2px;
+      border-radius: 22px;
+      background: linear-gradient(90deg, transparent, rgba(0, 255, 153, 0.04), transparent);
+      pointer-events: none;
+      filter: blur(14px);
+      mix-blend-mode: screen;
+    }
+  </style>
+</head>
+
+<body>
+  <div class="float-glow g1"></div>
+  <div class="float-glow g2"></div>
+  <div class="float-glow g3"></div>
+  <div class="float-glow g4"></div>
+
+  <div class="atm-wrap">
+    <div class="panel-left">
+      <div class="brand">BATCAVE • SECURE ACCESS</div>
+      <div class="sub">Enter your 4-digit PIN using the keypad.</div>
+      <svg width="100%" height="120" viewBox="0 0 600 120" preserveAspectRatio="none" style="opacity:.06">
+        <defs>
+          <linearGradient id="g" x1="0" x2="1">
+            <stop offset="0" stop-color="#00ff99" />
+            <stop offset="1" stop-color="#00c6ff" />
+          </linearGradient>
+        </defs>
+        <path d="M0 60 Q150 10 300 60 T600 60 L600 120 L0 120 Z" fill="url(#g)"></path>
+      </svg>
+    </div>
+
+    <div class="panel-right">
+      <h2>🔐 ATM PIN Verification</h2>
+      <div class="pin-display">
+        <div class="hint">PIN</div>
+        <input id="pin" type="password" placeholder="••••" maxlength="4" readonly />
+      </div>
+
+      <div class="keypad">
+        <button class="kp-btn" data-key="1">1</button>
+        <button class="kp-btn" data-key="2">2</button>
+        <button class="kp-btn" data-key="3">3</button>
+        <button class="kp-btn" data-key="4">4</button>
+        <button class="kp-btn" data-key="5">5</button>
+        <button class="kp-btn" data-key="6">6</button>
+        <button class="kp-btn" data-key="7">7</button>
+        <button class="kp-btn" data-key="8">8</button>
+        <button class="kp-btn" data-key="9">9</button>
+        <button class="kp-btn kp-clear" data-key="C">C</button>
+        <button class="kp-btn" data-key="0">0</button>
+        <button class="kp-btn kp-enter" data-key="ENTER" id="enter">↵</button>
+      </div>
+
+      <div id="message"></div>
+    </div>
+  </div>
+
+  <script>
+    const pinInput = document.getElementById('pin');
+    const msg = document.getElementById('message');
+    const buttons = document.querySelectorAll('.kp-btn');
+    let pinValue = '';
+
+    function updateDisplay() { pinInput.value = '•'.repeat(pinValue.length); }
+    function showMessage(t, type = 'success') { msg.textContent = t; msg.className = 'visible ' + (type === 'success' ? 'msg-success' : 'msg-error'); }
+    function hideMessage() { msg.className = ''; msg.textContent = ''; }
+
+    buttons.forEach(btn => {
+      btn.addEventListener('click', () => {
+        const key = btn.getAttribute('data-key');
+        if (key === 'C') { pinValue = ''; updateDisplay(); hideMessage(); return; }
+        if (key === 'ENTER') { authenticate(); return; }
+        if (pinValue.length >= 4) return;
+        pinValue += key; updateDisplay(); hideMessage();
+      });
+      btn.addEventListener('keyup', e => { if (e.key === 'Enter' || e.key === ' ') btn.click(); });
+    });
+
+    async function authenticate() {
+      if (pinValue.length !== 4) { showMessage('❗ Enter 4 digits', 'error'); return; }
+      showMessage('⌛ Verifying…', 'success');
+      try {
+        await new Promise(r => setTimeout(r, 700));
+        const ok = (pinValue === '1234');
+        if (ok) { showMessage('✅ Access Granted! Loading menu...', 'success'); }
+        else { showMessage('❌ Invalid PIN. Try again.', 'error'); }
+      } catch (e) {
+        showMessage('⚠️ Network error. Try again.', 'error');
+      } finally {
+        setTimeout(() => { pinValue = ''; updateDisplay(); }, 600);
+      }
+    }
+
+    window.addEventListener('keydown', e => {
+      if (e.key >= '0' && e.key <= '9') { if (pinValue.length < 4) { pinValue += e.key; updateDisplay(); hideMessage(); } }
+      else if (e.key === 'Backspace') { pinValue = pinValue.slice(0, -1); updateDisplay(); hideMessage(); }
+      else if (e.key === 'Enter') { authenticate(); }
+      else if (e.key.toLowerCase() === 'c') { pinValue = ''; updateDisplay(); hideMessage(); }
+    });
+  </script>
+</body>
+
+</html>

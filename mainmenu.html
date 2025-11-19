@@ -1,0 +1,195 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<title>ATM Main Menu — PIN Style (Centered)</title>
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --neon: #00ff99;
+    --accent: #00c6ff;
+  }
+
+  * { box-sizing: border-box; }
+
+  body {
+    margin: 0;
+    height: 100vh;
+    font-family: 'Poppins', sans-serif;
+    background: radial-gradient(circle at 10% 10%, #071124 0%, #0b2540 35%, #0d1a2b 100%);
+    color: #e6f7f0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    overflow: hidden;
+  }
+
+  /* Floating glow animation (very subtle) */
+  .float-glow {
+    position: absolute;
+    border-radius: 50%;
+    filter: blur(15px);
+    opacity: 0.15;
+    background: linear-gradient(135deg, var(--neon), var(--accent));
+    animation: floaty 6s ease-in-out infinite alternate;
+    mix-blend-mode: screen;
+  }
+  .float-glow.g1 { top: 15%; left: 12%; width: 40px; height: 40px; }
+  .float-glow.g2 { top: 70%; right: 18%; width: 50px; height: 50px; animation-delay: 2s; }
+  .float-glow.g3 { bottom: 20%; left: 20%; width: 30px; height: 30px; animation-delay: 3.5s; }
+  @keyframes floaty {
+    from { transform: translateY(0) scale(1); }
+    to { transform: translateY(-25px) scale(1.1); }
+  }
+
+  /* Centered container */
+  .atm-wrap {
+    position: relative;
+    background: rgba(2, 35, 183, 0.06);
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    box-shadow: 0 25px 60px rgba(0, 0, 0, 0.6), inset 0 0 15px rgba(255, 255, 255, 0.05);
+    backdrop-filter: blur(14px);
+    border-radius: 24px;
+    padding: 50px 60px;
+    width: 900px;
+    max-width: 95vw;
+    text-align: center;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+  }
+  .atm-wrap:hover {
+    transform: translateY(-8px);
+    box-shadow: 0 30px 80px rgba(0, 0, 0, 0.65);
+  }
+
+  /* Header */
+  .atm-wrap h2 {
+    font-size: 40px;
+    font-weight: 700;
+    color: var(--neon);
+    margin-bottom: 40px;
+    letter-spacing: 1px;
+    text-shadow: 0 0 10px rgba(0, 255, 153, 0.3);
+  }
+
+  /* Menu grid */
+  .menu-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 30px;
+    justify-items: center;
+    align-items: center;
+    margin-bottom: 40px;
+  }
+
+  .menu-card {
+    width: 100%;
+    max-width: 330px;
+    height: 140px;
+    border-radius: 18px;
+    background: rgba(175, 239, 37, 0.03);
+    border: 1px solid rgba(255, 255, 255, 0.05);
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.45);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    cursor: pointer;
+    transition: all 0.25s ease;
+  }
+
+  .menu-card:hover {
+    transform: translateY(-10px);
+    box-shadow: 0 15px 45px rgba(0, 0, 0, 0.55);
+    background: rgba(255, 255, 255, 0.05);
+  }
+
+  .menu-label {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    font-size: 22px;
+    font-weight: 600;
+    color: #e6f7f0;
+  }
+
+  .menu-icon {
+    font-size: 26px;
+    color: var(--accent);
+  }
+
+  /* Logout Button */
+  .logout {
+    width: 260px;
+    padding: 16px;
+    font-size: 20px;
+    border: none;
+    border-radius: 14px;
+    font-weight: 700;
+    color: #fff;
+    background: linear-gradient(135deg, #ff6b6b, #ff9966);
+    cursor: pointer;
+    transition: all 0.25s ease;
+    box-shadow: 0 8px 26px rgba(0, 0, 0, 0.45);
+  }
+
+  .logout:hover {
+    transform: scale(1.05);
+    background: linear-gradient(135deg, #ff758c, #ff7eb3);
+    box-shadow: 0 12px 36px rgba(0, 0, 0, 0.6);
+  }
+
+  @media (max-width: 800px) {
+    .atm-wrap { padding: 40px 30px; width: 95vw; }
+    .menu-grid { grid-template-columns: 1fr; gap: 20px; }
+    .menu-card { height: 120px; }
+  }
+</style>
+</head>
+
+<body>
+  <div class="float-glow g1"></div>
+  <div class="float-glow g2"></div>
+  <div class="float-glow g3"></div>
+
+  <div class="atm-wrap">
+    <h2>🏦 ATM Main Menu</h2>
+
+    <div class="menu-grid">
+      <div class="menu-card" id="balanceBtn">
+        <div class="menu-label">
+          <span class="menu-icon">💰</span> <span>Balance</span>
+        </div>
+      </div>
+
+      <div class="menu-card" id="depositBtn">
+        <div class="menu-label">
+          <span class="menu-icon">💵</span> <span>Deposit</span>
+        </div>
+      </div>
+
+      <div class="menu-card" id="withdrawBtn">
+        <div class="menu-label">
+          <span class="menu-icon">💳</span> <span>Withdraw</span>
+        </div>
+      </div>
+
+      <div class="menu-card" id="transferBtn">
+        <div class="menu-label">
+          <span class="menu-icon">🔁</span> <span>Transfer</span>
+        </div>
+      </div>
+    </div>
+
+    <button class="logout" id="logoutBtn">🚪 Logout</button>
+  </div>
+
+  <script>
+    const go = (text) => alert(`${text} — Redirecting...`);
+    balanceBtn.onclick = () => go('📊 Balance Inquiry');
+    depositBtn.onclick = () => go('💵 Deposit');
+    withdrawBtn.onclick = () => go('💳 Withdraw');
+    transferBtn.onclick = () => go('🔁 Transfer');
+    logoutBtn.onclick = () => go('🚪 Logging Out');
+  </script>
+</body>
+</html>

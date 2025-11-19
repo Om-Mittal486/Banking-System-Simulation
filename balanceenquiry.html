@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<title>ATM Balance Enquiry — PIN Style</title>
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --neon: #13df8d;
+    --accent: #24abd1;
+    --balance: #0df4af;
+  }
+
+  * { box-sizing: border-box; }
+
+  body {
+    font-family: 'Poppins', sans-serif;
+    height: 100vh;
+    margin: 0;
+    background: radial-gradient(circle at 10% 10%, #071124 0%, #0b2540 35%, #0d1a2b 100%);
+    color: #e6f7f0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    overflow: hidden;
+  }
+
+  /* Subtle floating glows */
+  .float-glow {
+    position: absolute;
+    border-radius: 50%;
+    filter: blur(14px);
+    opacity: .12;
+    background: linear-gradient(135deg, var(--balance), var(--accent));
+    animation: floaty 6s ease-in-out infinite alternate;
+    mix-blend-mode: screen;
+  }
+  .float-glow.g1 { top: 12%; left: 10%; width: 28px; height: 28px; }
+  .float-glow.g2 { top: 20%; right: 14%; width: 36px; height: 36px; animation-delay: 1.8s; }
+  .float-glow.g3 { bottom: 14%; left: 8%; width: 22px; height: 22px; animation-delay: 3s; }
+  .float-glow.g4 { bottom: 20%; right: 12%; width: 30px; height: 30px; animation-delay: 4.2s; }
+  @keyframes floaty {
+    from { transform: translateY(0) scale(.95); }
+    to { transform: translateY(-25px) scale(1.1); }
+  }
+
+  /* Main Container */
+  .atm-container {
+    background: rgba(255, 255, 255, 0.06);
+    backdrop-filter: blur(18px);
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    border-radius: 24px;
+    box-shadow: 0 25px 60px rgba(0, 0, 0, 0.6), inset 0 0 15px rgba(255, 255, 255, 0.04);
+    padding: 70px 90px;
+    width: 650px;
+    max-width: 95vw;
+    text-align: center;
+    transition: transform .35s ease, box-shadow .35s ease;
+  }
+  .atm-container:hover {
+    transform: translateY(-8px);
+    box-shadow: 0 30px 80px rgba(0, 0, 0, 0.65);
+  }
+
+  h2 {
+    font-size: 40px;
+    font-weight: 700;
+    color: var(--balance);
+    margin-bottom: 40px;
+    letter-spacing: 1px;
+    text-shadow: 0 0 10px rgba(32, 201, 151, 0.3);
+  }
+
+  button {
+    width: 90%;
+    padding: 18px;
+    background: linear-gradient(135deg, #20c997, #00ff99);
+    color: #fff;
+    font-size: 22px;
+    font-weight: 700;
+    border: none;
+    border-radius: 14px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    box-shadow: 0 6px 24px rgba(0, 0, 0, 0.4);
+  }
+  button:hover {
+    transform: scale(1.05);
+    background: linear-gradient(135deg, #00ff99, #20c997);
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.55);
+  }
+
+  #msg {
+    margin-top: 30px;
+    font-weight: 600;
+    font-size: 22px;
+    color: var(--balance);
+    opacity: 0;
+    transform: translateY(10px);
+    transition: all .45s ease;
+  }
+  #msg.visible {
+    opacity: 1;
+    transform: translateY(0);
+  }
+
+  @media (max-width: 700px) {
+    .atm-container { padding: 50px 30px; width: 90vw; }
+    h2 { font-size: 28px; }
+    button { font-size: 18px; }
+  }
+</style>
+</head>
+<body>
+  <div class="float-glow g1"></div>
+  <div class="float-glow g2"></div>
+  <div class="float-glow g3"></div>
+  <div class="float-glow g4"></div>
+
+  <div class="atm-container">
+    <h2>💰 Balance Enquiry</h2>
+    <button id="balanceBtn">Show Balance</button>
+    <div id="msg"></div>
+  </div>
+
+  <script>
+    const balanceBtn = document.getElementById('balanceBtn');
+    const msg = document.getElementById('msg');
+    const balance = 5000; // Demo balance
+
+    balanceBtn.addEventListener('click', () => {
+      msg.textContent = `Your current balance is ₹${balance}`;
+      msg.classList.add('visible');
+      setTimeout(() => msg.classList.remove('visible'), 4000);
+    });
+  </script>
+</body>
+</html>

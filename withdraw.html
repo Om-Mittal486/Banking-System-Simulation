@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<title>ATM Withdraw Cash — PIN Style</title>
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --neon:#00ff99;
+    --accent:#00c6ff;
+    --warn:#07ff2c;
+  }
+
+  *{box-sizing:border-box;}
+  body{
+    font-family:'Poppins',sans-serif;
+    height:100vh;margin:0;
+    background:radial-gradient(circle at 10% 10%,#071124 0%,#0b2540 35%,#0d1a2b 100%);
+    color:#e6f7f0;
+    display:flex;align-items:center;justify-content:center;
+    overflow:hidden;
+  }
+
+  .float-glow{
+    position:absolute;border-radius:50%;filter:blur(14px);opacity:.12;
+    background:linear-gradient(135deg,var(--neon),var(--accent));
+    animation:floaty 6s ease-in-out infinite alternate;mix-blend-mode:screen;
+  }
+  .float-glow.g1{top:10%;left:10%;width:28px;height:28px;}
+  .float-glow.g2{top:20%;right:12%;width:36px;height:36px;animation-delay:1.8s;}
+  .float-glow.g3{bottom:12%;left:8%;width:22px;height:22px;animation-delay:3.2s;}
+  .float-glow.g4{bottom:18%;right:14%;width:30px;height:30px;animation-delay:4.5s;}
+  @keyframes floaty{from{transform:translateY(0)scale(.95)}to{transform:translateY(-25px)scale(1.1)}}
+
+  .atm-container{
+    background:rgba(255,255,255,0.06);
+    backdrop-filter:blur(18px);
+    border:1px solid rgba(255,255,255,0.08);
+    border-radius:24px;
+    box-shadow:0 25px 60px rgba(0,0,0,0.6),inset 0 0 15px rgba(255,255,255,0.04);
+    padding:70px 90px;
+    width:680px;max-width:95vw;
+    text-align:center;
+    transition:transform .35s ease,box-shadow .35s ease;
+  }
+  .atm-container:hover{transform:translateY(-8px);box-shadow:0 30px 80px rgba(0,0,0,0.65);}
+
+  h2{
+    font-size:40px;font-weight:700;
+    color:var(--warn);
+    margin-bottom:36px;
+    letter-spacing:1px;
+    text-shadow:0 0 10px rgba(255,193,7,0.25);
+  }
+
+  input{
+    width:85%;
+    padding:18px;
+    margin:18px 0 24px;
+    font-size:20px;
+    border-radius:12px;
+    border:1.5px solid rgba(255,255,255,0.25);
+    background:rgba(0,0,0,0.3);
+    color:#e6f7f0;
+    text-align:center;
+    outline:none;
+    transition:all .3s ease;
+  }
+  input::placeholder{color:rgba(255,255,255,0.6);}
+  input:focus{border-color:var(--warn);box-shadow:0 0 14px rgba(255,193,7,0.3);transform:scale(1.03);}
+
+  button{
+    width:90%;
+    padding:18px;
+    background:linear-gradient(135deg,#07c5ff,#00ff2f);
+    color:#0a1a17;
+    font-size:22px;font-weight:700;
+    border:none;border-radius:14px;
+    cursor:pointer;
+    transition:all .3s ease;
+    box-shadow:0 6px 24px rgba(0,0,0,0.4);
+  }
+  button:hover{
+    transform:scale(1.05);
+    background:linear-gradient(135deg,#00ffaa,#07c9ff);
+    box-shadow:0 10px 30px rgba(0,0,0,0.55);
+  }
+
+  #msg{
+    margin-top:26px;
+    font-weight:600;
+    font-size:20px;
+    color:var(--warn);
+    opacity:0;
+    transform:translateY(10px);
+    transition:all .45s ease;
+  }
+  #msg.visible{opacity:1;transform:translateY(0);}
+
+  @media(max-width:700px){
+    .atm-container{padding:50px 30px;width:90vw;}
+    h2{font-size:28px;}
+    button{font-size:18px;}
+  }
+</style>
+</head>
+<body>
+  <div class="float-glow g1"></div>
+  <div class="float-glow g2"></div>
+  <div class="float-glow g3"></div>
+  <div class="float-glow g4"></div>
+
+  <div class="atm-container">
+    <h2>💸 Withdraw Cash</h2>
+    <input type="number" id="withdrawAmount" placeholder="Enter amount in ₹" min="1" />
+    <button id="withdrawBtn">Withdraw Now</button>
+    <div id="msg"></div>
+  </div>
+
+  <script>
+    const withdrawBtn=document.getElementById('withdrawBtn');
+    const msg=document.getElementById('msg');
+    const withdrawAmount=document.getElementById('withdrawAmount');
+    let balance=5000;
+
+    withdrawBtn.addEventListener('click',()=>{
+      const amount=Number(withdrawAmount.value);
+      if(amount>0 && amount<=balance){
+        balance-=amount;
+        msg.style.color='#ffc107';
+        msg.textContent=`✅ ₹${amount} withdrawn successfully.\nRemaining Balance: ₹${balance}`;
+        msg.classList.add('visible');
+        withdrawAmount.value='';
+      }else{
+        msg.style.color='#ff5555';
+        msg.textContent=amount<=0?'⚠️ Enter a valid amount!':'❌ Insufficient balance!';
+        msg.classList.add('visible');
+      }
+      setTimeout(()=>msg.classList.remove('visible'),3000);
+    });
+  </script>
+</body>
+</html>
